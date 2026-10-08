@@ -37,6 +37,9 @@ if az containerapp show -n "$APP" -g "$RG" -o none 2>/dev/null; then
   az containerapp update -n "$APP" -g "$RG" --image "$IMAGE" \
     --min-replicas "$MIN_REPLICAS" --max-replicas "$MAX_REPLICAS" \
     --set-env-vars "${ENV_VARS[@]}" -o none
+  # Running replicas don't pick up a changed secret until they restart
+  REVISION=$(az containerapp show -n "$APP" -g "$RG" --query properties.latestRevisionName -o tsv)
+  az containerapp revision restart -n "$APP" -g "$RG" --revision "$REVISION" -o none
 else
   echo "Creating $APP..."
   # 2 vCPU / 4 GiB per replica. Each replica runs one image at a time, so
