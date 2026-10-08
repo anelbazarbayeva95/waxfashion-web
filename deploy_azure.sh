@@ -37,9 +37,10 @@ if az containerapp show -n "$APP" -g "$RG" -o none 2>/dev/null; then
   az containerapp update -n "$APP" -g "$RG" --image "$IMAGE" \
     --min-replicas "$MIN_REPLICAS" --max-replicas "$MAX_REPLICAS" \
     --set-env-vars "${ENV_VARS[@]}" -o none
-  # Running replicas don't pick up a changed secret until they restart
-  REVISION=$(az containerapp show -n "$APP" -g "$RG" --query properties.latestRevisionName -o tsv)
-  az containerapp revision restart -n "$APP" -g "$RG" --revision "$REVISION" -o none
+  # The CLI creates an "express" environment, which has one built-in revision
+  # and no revision restart. Replicas started from now on use the new
+  # settings; one that is already running keeps the old ones until the app
+  # scales to zero (about 5 idle minutes) or is stopped and started.
 else
   echo "Creating $APP..."
   # 2 vCPU / 4 GiB per replica. Each replica runs one image at a time, so
