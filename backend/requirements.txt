@@ -1,4 +1,4 @@
-# torch is installed separately in the Dockerfile from the CPU-only index
+# torch (CPU build) is installed alongside these in the Dockerfile
 fastapi==0.115.6
 uvicorn[standard]==0.32.1
 numpy<2

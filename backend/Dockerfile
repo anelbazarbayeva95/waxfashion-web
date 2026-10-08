@@ -6,9 +6,13 @@ FROM python:3.10-slim
 RUN apt-get update && apt-get install -y --no-install-recommends git \
     && rm -rf /var/lib/apt/lists/*
 
-RUN pip install --no-cache-dir torch==2.5.1 --index-url https://download.pytorch.org/whl/cpu
+# "+cpu" pins the CPU-only torch build from the PyTorch index; everything else
+# (torch's own dependencies included) can come from PyPI.
 COPY requirements.txt /tmp/requirements.txt
-RUN pip install --no-cache-dir -r /tmp/requirements.txt
+RUN pip install --no-cache-dir --upgrade pip \
+    && pip install --no-cache-dir "torch==2.9.1+cpu" -r /tmp/requirements.txt \
+       --index-url https://download.pytorch.org/whl/cpu \
+       --extra-index-url https://pypi.org/simple
 
 RUN git clone --depth=1 https://github.com/researchpace/waxfashion.git /opt/waxfashion \
     && rm -rf /opt/waxfashion/.git
