@@ -17,9 +17,15 @@ RUN pip install --no-cache-dir --upgrade pip \
 RUN git clone --depth=1 https://github.com/researchpace/waxfashion.git /opt/waxfashion \
     && rm -rf /opt/waxfashion/.git
 
+# AWS Lambda Web Adapter: lets this same image run on Lambda unchanged. It's a
+# Lambda extension, so it's ignored everywhere else (Azure, local Docker).
+COPY --from=public.ecr.aws/awsguru/aws-lambda-adapter:1.1.0 /lambda-adapter /opt/extensions/lambda-adapter
+
 ENV STYLEGAN_DIR=/opt/waxfashion/stylegan2-ada-pytorch \
     HF_HOME=/tmp/hf \
-    PYTHONUNBUFFERED=1
+    PYTHONUNBUFFERED=1 \
+    AWS_LWA_PORT=8000 \
+    AWS_LWA_READINESS_CHECK_PATH=/health
 
 WORKDIR /app
 COPY app.py .

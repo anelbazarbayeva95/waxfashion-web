@@ -72,6 +72,30 @@ allows certain regions. Rerun with e.g. `LOCATION=westeurope` or `LOCATION=swede
 
 ---
 
+## Deploy the backend to AWS instead (Lambda)
+
+The same image runs on AWS Lambda: it includes the
+[AWS Lambda Web Adapter](https://github.com/awslabs/aws-lambda-web-adapter), which
+Lambda uses and every other host ignores. Lambda scales to zero, has a monthly
+free tier, and a concurrency cap gives a hard ceiling on cost.
+
+In the AWS console, open **CloudShell** (the `>_` icon), then:
+```bash
+git clone https://github.com/anelbazarbayeva95/waxfashion-web.git && cd waxfashion-web
+```
+```bash
+HF_TOKEN=hf_xxx ALLOWED_ORIGINS=https://waxfashion-web-frontend.vercel.app ./deploy_aws.sh
+```
+It copies the image into Amazon ECR, creates the function (10 GB memory = 6 vCPU,
+at most 5 copies at once), and prints a public URL. Put that URL in
+`frontend/config.js` and push.
+
+- If memory above 3008 MB is refused (some new accounts), rerun with `MEMORY_MB=3008`.
+- In AWS Academy labs, where you can't create IAM roles, the script uses `LabRole`.
+- To update after a new image build, run the same command again.
+
+---
+
 ## Things to know
 
 - **Cold starts:** with `MIN_REPLICAS=0`, the first visitor after a quiet
