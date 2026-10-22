@@ -86,8 +86,8 @@ git clone https://github.com/anelbazarbayeva95/waxfashion-web.git && cd waxfashi
 ```bash
 HF_TOKEN=hf_xxx ALLOWED_ORIGINS=https://waxfashion-web-frontend.vercel.app ./deploy_aws.sh
 ```
-It copies the image into Amazon ECR, creates the function (10 GB memory = 6 vCPU,
-at most 5 copies at once), and prints a public URL. Put that URL in
+It copies the image into Amazon ECR, creates the function (4 GB memory, about 2.3 vCPU,
+at most 3 copies at once), and prints a public URL. Put that URL in
 `frontend/config.js` and push.
 
 - If memory above 3008 MB is refused (some new accounts), rerun with `MEMORY_MB=3008`.

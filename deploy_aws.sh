@@ -6,7 +6,7 @@
 #   HF_TOKEN=hf_xxx ./deploy_aws.sh
 #
 # Optional: AWS_REGION (default us-east-1), FUNCTION, REPO, SOURCE_IMAGE,
-# MEMORY_MB (default 10240 = 6 vCPU), MAX_CONCURRENCY (default 5, a hard cap on
+# MEMORY_MB (default 4096, about 2.3 vCPU), MAX_CONCURRENCY (default 3, a hard cap on
 # cost), ALLOWED_ORIGINS (e.g. https://waxfashion-web-frontend.vercel.app),
 # ROLE_ARN (an existing Lambda execution role, e.g. LabRole in AWS Academy).
 set -euo pipefail
@@ -15,8 +15,8 @@ REGION=${AWS_REGION:-us-east-1}
 FUNCTION=${FUNCTION:-waxfashion-api}
 REPO=${REPO:-waxfashion-api}
 SOURCE_IMAGE=${SOURCE_IMAGE:-ghcr.io/anelbazarbayeva95/waxfashion-api:latest}
-MEMORY_MB=${MEMORY_MB:-10240}
-MAX_CONCURRENCY=${MAX_CONCURRENCY:-5}
+MEMORY_MB=${MEMORY_MB:-4096}
+MAX_CONCURRENCY=${MAX_CONCURRENCY:-3}
 ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-*}
 HF_TOKEN=${HF_TOKEN:?Set HF_TOKEN to a Hugging Face token that can read the model}
 ROLE_ARN=${ROLE_ARN:-}
